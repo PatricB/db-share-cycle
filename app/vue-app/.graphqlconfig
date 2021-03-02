@@ -1,0 +1,15 @@
+{
+  "name": "DB Share Cycle GraphQL Schema",
+  "schemaPath": "./schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Default": {
+        "url": "http://localhost/pimcore-graphql-webservices/",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      }
+    }
+  }
+}

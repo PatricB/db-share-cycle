@@ -1,0 +1,38 @@
+type Query {
+    getStationListing: getStationListing,
+    getVehicleListing: getVehicleListing
+}
+
+type getStationListing {
+    edges: [Station]
+}
+
+type Station {
+    node: StationDetails
+}
+
+type StationDetails {
+    id: Int
+    key: String
+    polygon: [Position]
+}
+
+type Position {
+    latitude: Float,
+    longitude: Float
+}
+
+type getVehicleListing {
+    edges: [Vehicle]
+}
+
+type Vehicle {
+    node: VehicleDetails
+}
+
+type VehicleDetails {
+    id: Int
+    vehicle_type: String
+    key: String
+    position: Position
+}
