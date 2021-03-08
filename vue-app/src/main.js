@@ -2,10 +2,8 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import Vue from 'vue';
-import VueRouter from 'vue-router';
 import VueApollo from 'vue-apollo';
 import App from './App';
-import store from './store';
 
 // HTTP connection to the API
 const httpLink = createHttpLink({
@@ -28,12 +26,9 @@ const apolloProvider = new VueApollo({
     defaultClient: apolloClient
 });
 
-
-Vue.use(VueRouter);
 Vue.use(VueApollo);
 
 new Vue({
     render: h => h(App),
-    apolloProvider,
-    store
+    apolloProvider
 }).$mount('#app');

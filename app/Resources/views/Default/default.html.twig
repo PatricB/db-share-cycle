@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="UTF-8">
+    <title>DB share cycle</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    {% apply spaceless %}
+        {% do pimcore_head_link().appendStylesheet('/vue-app/css/app.css') %}
+        {% do pimcore_head_script().appendFile(asset('/vue-app/js/app.js'), 'text/javascript', ['deferred']) %}
+    {% endapply %}
+
+    {% block head_stylesheets deferred %}
+        {{ pimcore_head_link() }}
+    {% endblock %}
+</head>
+
+<style type="text/css">
+    body {
+        padding: 0;
+        margin: 0;
+        font-family: "Lucida Sans Unicode", Arial;
+        font-size: 14px;
+    }
+
+    #site {
+        margin: 0 auto;
+    }
+
+</style>
+<body>
+
+<div id="site">
+    <div id="app"></div>
+</div>
+{# output scripts added before #}
+{% block headscripts deferred %}
+{{ pimcore_head_script() }}
+{% endblock %}
+</body>
+</html>

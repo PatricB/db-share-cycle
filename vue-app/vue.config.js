@@ -15,7 +15,7 @@ process.env.VUE_APP_ASSETS_PATH = process.env.NODE_ENV === 'production' ? '/vue-
 
 // vue.config.js
 module.exports = {
-    outputDir: process.env.NODE_ENV === 'production' ? '../../web/vue-app' : 'dist',
+    outputDir: process.env.NODE_ENV === 'production' ? '../web/vue-app' : 'dist',
     css: {
         loaderOptions: {
             sass: {

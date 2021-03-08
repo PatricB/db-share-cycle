@@ -4,22 +4,12 @@
       <div class="sc-headline">
         <h1><span class="text-primary">DB</span> <span class="muted">share-cycle</span></h1>
       </div>
-
-      <button
-        v-if="isAuthenticated"
-        class="sc-logout-button"
-        @click="logout()"
-      >
-        Logout
-      </button>
     </header>
     <Map
-      v-if="isAuthenticated"
       :center="[51.33600, 12.37499]"
       :stations="stations"
       :vehicles="vehicles"
     />
-    <Login v-else-if="!loading" />
 
     <div
       v-if="loading"
@@ -33,7 +23,6 @@
 <script>
 import Map from './components/Map';
 import gql from 'graphql-tag';
-import Login from './components/Login';
 
 const GET_STATIONS_AND_VEHICLES = gql`
     query {
@@ -67,7 +56,6 @@ const GET_STATIONS_AND_VEHICLES = gql`
 export default {
     name: 'App',
     components: {
-        Login,
         Map
     },
     data () {
@@ -98,23 +86,12 @@ export default {
                     };
                 }) : [];
         },
-        isAuthenticated () {
-            return this.$store.state.isAuthenticated;
-        },
         loading () {
-            return !this.isMounted || this.$apollo.loading || this.$store.getters.authenticationPending;
+            return !this.isMounted || this.$apollo.loading;
         }
-    },
-    created () {
-        this.$store.dispatch('checkIfAuthenticated');
     },
     mounted () {
         this.isMounted = true;
-    },
-    methods: {
-        logout () {
-            this.$store.dispatch('forgetLogin');
-        }
     },
     apollo: {
         apiData: {
@@ -122,9 +99,6 @@ export default {
             update: res => res,
             error (error) { // Catch the error
                 console.log(error);
-            },
-            skip () {
-                return !this.isAuthenticated;
             }
         }
     }
@@ -167,12 +141,6 @@ export default {
                 font-size: 1.5rem;
             }
         }
-
-        .sc-logout-button {
-            margin: .5rem;
-            height: 1.75rem;
-            padding: .25rem .5rem;
-        }
     }
 
     .text-primary {
@@ -182,7 +150,7 @@ export default {
     .sc-loader {
         position: absolute;
         z-index: 1000;
-        border: $loader-border-size solid $gray-90; /* Light grey */
+        border: $loader-border-size solid $gray-90;
         border-top: $loader-border-size solid $primary;
         border-radius: 50%;
         color: transparent;

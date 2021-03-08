@@ -24,6 +24,14 @@ class AppKernel extends Kernel
      */
     public function registerBundlesToCollection(BundleCollection $collection)
     {
+        if (class_exists('\Http\HttplugBundle\HttplugBundle')) {
+            $collection->addBundle(new \Http\HttplugBundle\HttplugBundle);
+        }
+
+        if (class_exists('\HWI\Bundle\OAuthBundle\HWIOAuthBundle')) {
+            $collection->addBundle(new \HWI\Bundle\OAuthBundle\HWIOAuthBundle);
+        }
+
         if (class_exists('\\AppBundle\\AppBundle')) {
             $collection->addBundle(new \AppBundle\AppBundle);
         }

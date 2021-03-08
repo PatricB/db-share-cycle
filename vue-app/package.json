@@ -2,7 +2,7 @@
   "name": "db-share-cycle-app",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build && rm ../../web/vue-app/index.html",
+    "build": "vue-cli-service build && rm ../web/vue-app/index.html",
     "dev": "vue-cli-service serve --open",
     "lint": "vue-cli-service lint",
     "serve": "vue-cli-service serve --open"
@@ -18,9 +18,7 @@
     "leaflet": "^1.7.1",
     "vue": "^2.6.12",
     "vue-apollo": "^3.0.7",
-    "vue-router": "^3.5.1",
-    "vue2-leaflet": "^2.6.0",
-    "vuex": "^3.6.2"
+    "vue2-leaflet": "^2.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.8",
