@@ -1,26 +1,41 @@
 <template>
   <div class="share-cycle-app">
     <header class="sc-header">
-      <h1><span class="text-primary">DB</span> <span class="muted">share-cycle</span></h1>
-
-      <div v-if="$apollo.loading">
-        Loading...
+      <div class="sc-headline">
+        <h1><span class="text-primary">DB</span> <span class="muted">share-cycle</span></h1>
       </div>
+
+      <button
+        v-if="isAuthenticated"
+        class="sc-logout-button"
+        @click="logout()"
+      >
+        Logout
+      </button>
     </header>
     <Map
+      v-if="isAuthenticated"
       :center="[51.33600, 12.37499]"
       :stations="stations"
       :vehicles="vehicles"
     />
+    <Login v-else-if="!loading" />
+
+    <div
+      v-if="loading"
+      class="sc-loader"
+    >
+      Loading...
+    </div>
   </div>
 </template>
 
 <script>
 import Map from './components/Map';
 import gql from 'graphql-tag';
+import Login from './components/Login';
 
-
-const GET_STATIONS_AND_VEHICLES = gql `
+const GET_STATIONS_AND_VEHICLES = gql`
     query {
     stations: getStationListing {
         list: edges {
@@ -47,11 +62,12 @@ const GET_STATIONS_AND_VEHICLES = gql `
         }
     }
     }
-`
+`;
 
 export default {
     name: 'App',
     components: {
+        Login,
         Map
     },
     data () {
@@ -59,36 +75,57 @@ export default {
             apiData: {
                 stations: [],
                 vehicles: []
-            }
+            },
+            isMounted: false
         };
-    },
-    apollo: {
-        apiData: {
-            query: GET_STATIONS_AND_VEHICLES,
-            update: res => res,
-            error(error) { // Catch the error
-                console.log(error);
-            }
-        }
     },
     computed: {
         stations () {
             return this.apiData && this.apiData.stations && this.apiData.stations.list
                 ? this.apiData.stations.list.map(data => {
-                return {
-                    ...data.details,
-                    polygon: data.details.polygon.map(p => [p.lat, p.long])
-                }
-            }) : []
+                    return {
+                        ...data.details,
+                        polygon: data.details.polygon.map(p => [p.lat, p.long])
+                    };
+                }) : [];
         },
         vehicles () {
             return this.apiData && this.apiData.vehicles && this.apiData.vehicles.list
                 ? this.apiData.vehicles.list.map(data => {
-                return {
-                    ...data.details,
-                    position: [data.details.position.lat, data.details.position.long]
-                }
-            }) : []
+                    return {
+                        ...data.details,
+                        position: [data.details.position.lat, data.details.position.long]
+                    };
+                }) : [];
+        },
+        isAuthenticated () {
+            return this.$store.state.isAuthenticated;
+        },
+        loading () {
+            return !this.isMounted || this.$apollo.loading || this.$store.getters.authenticationPending;
+        }
+    },
+    created () {
+        this.$store.dispatch('checkIfAuthenticated');
+    },
+    mounted () {
+        this.isMounted = true;
+    },
+    methods: {
+        logout () {
+            this.$store.dispatch('forgetLogin');
+        }
+    },
+    apollo: {
+        apiData: {
+            query: GET_STATIONS_AND_VEHICLES,
+            update: res => res,
+            error (error) { // Catch the error
+                console.log(error);
+            },
+            skip () {
+                return !this.isAuthenticated;
+            }
         }
     }
 };
@@ -108,25 +145,72 @@ export default {
 .share-cycle-app {
     font-family: sans-serif;
 
-    .text-primary {
-        color: $primary !important;
-    }
-
     .sc-header {
         position: absolute;
         top: 0;
         left: 0;
-        background-color: #fff;
-        padding: 1rem 1.5rem;
-        margin: .5rem;
-        border-radius: 2px;
-        box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
         z-index: 15;
-        color: $gray-30;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
 
-        h1 {
-            font-size: 1.5rem;
+        .sc-headline {
+            background-color: #fff;
+            padding: 1rem 1.5rem;
+            margin: .5rem;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+            color: $gray-30;
+
+            h1 {
+                font-size: 1.5rem;
+            }
         }
+
+        .sc-logout-button {
+            margin: .5rem;
+            height: 1.75rem;
+            padding: .25rem .5rem;
+        }
+    }
+
+    .text-primary {
+        color: $primary !important;
+    }
+
+    .sc-loader {
+        position: absolute;
+        z-index: 1000;
+        border: $loader-border-size solid $gray-90; /* Light grey */
+        border-top: $loader-border-size solid $primary;
+        border-radius: 50%;
+        color: transparent;
+        font-size: 0;
+        line-height: 0;
+        width: $loader-size;
+        height: $loader-size;
+        left: calc(50% - #{$loader-size / 2});
+        top: calc(50% - #{$loader-size / 2});
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .sc-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        min-height: 1rem;
+        background-color: #fff;
     }
 
     .sc-map {

@@ -1,5 +1,9 @@
 parameters:
     secret: ThisTokenIsNotSoSecretChangeIt
+    oauth:
+        github:
+            client_id: ThisIsNotSoSecretChangeIt
+            client_secret: ThisIsNotSoSecretChangeIt
 
     # customize the full path to external executables
     # normally they are auto-detected by `which program` or auto-discovered in the configured path in

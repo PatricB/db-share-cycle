@@ -86,7 +86,7 @@ export default {
                 zoomControl: false // disable default zoom control to show it at another position
             },
             markerIcon: new Icon({
-                iconUrl: process.env.VUE_APP_ASSETS_PATH + '/img/marker_circle.svg',
+                iconUrl: process.env.VUE_APP_ASSETS_PATH + 'img/marker_circle.svg',
                 iconSize: [18, 18],
                 iconAnchor: [9, 9]
             })

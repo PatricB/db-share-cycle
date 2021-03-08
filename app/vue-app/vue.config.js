@@ -11,7 +11,7 @@ try {
 
 const host = process.env.VUE_APP_DEV_SERVER || "http://sandbox.test";
 
-process.env.VUE_APP_ASSETS_PATH = process.env.NODE_ENV === 'production' ? '/vue-app' : '/';
+process.env.VUE_APP_ASSETS_PATH = process.env.NODE_ENV === 'production' ? '/vue-app/' : '/';
 
 // vue.config.js
 module.exports = {
